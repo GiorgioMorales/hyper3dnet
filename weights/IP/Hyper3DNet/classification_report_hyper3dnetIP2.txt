@@ -1,0 +1,6 @@
+Overall accuracy99.942% (+/- 0.078%)
+Average accuracy99.893% (+/- 0.188%)
+Kappa accuracy99.933% (+/- 0.089%)
+Precision accuracy99.840% (+/- 0.258%)
+Recall accuracy99.893% (+/- 0.188%)
+F1 accuracy99.861% (+/- 0.188%)

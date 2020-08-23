@@ -104,46 +104,46 @@ with open(file_name, 'w') as x_file:
 
 
 # Segmentation result
-X, y = load_HSISAT(dataset)
-height = y.shape[0]
-width = y.shape[1]
-X, pca = applyPCA(X, numComponents=30)
-X = padWithZeros(X, windowSize // 2)
+if dataset == 'IP' or dataset == 'PU' or dataset == 'SA':
+    X, y = load_HSISAT(dataset)
+    height = y.shape[0]
+    width = y.shape[1]
+    X, pca = applyPCA(X, numComponents=30)
+    X = padWithZeros(X, windowSize // 2)
 
-# calculate the predicted image
-outputs = np.zeros((height, width))
-for i in range(height):
-    for j in range(width):
-        target = int(y[i, j])
-        if target == 0:
-            continue
-        else:
-            image_patch = Patch(X, i, j, windowSize)
-            print(i, " ", j)
-            X_test_image = image_patch.reshape(1, image_patch.shape[0], image_patch.shape[1],
-                                               image_patch.shape[2]).astype('float32')
-            prediction = (model.predict(X_test_image))
-            prediction = np.argmax(prediction, axis=1)
-            outputs[i][j] = prediction + 1
+    # calculate the predicted image
+    outputs = np.zeros((height, width))
+    for i in range(height):
+        for j in range(width):
+            target = int(y[i, j])
+            if target == 0:
+                continue
+            else:
+                image_patch = Patch(X, i, j, windowSize)
+                print(i, " ", j)
+                X_test_image = image_patch.reshape(1, image_patch.shape[0], image_patch.shape[1],
+                                                   image_patch.shape[2]).astype('float32')
+                prediction = (model.predict(X_test_image))
+                prediction = np.argmax(prediction, axis=1)
+                outputs[i][j] = prediction + 1
+        
+    # Print Ground-truth, network output, and comparison
+    colors = spectral.spy_colors
+    colors[1] = [125, 80, 0]
+    colors[2] = [80, 125, 0]
+    colors[10] = [150, 30, 100]
+    colors[11] = [200, 100,   0]
+    ground_truth = spectral.imshow(classes=y, figsize=(7, 7), colors=colors)
+    spectral.save_rgb('weights/' + dataset + network + 'dataset_gt.png', y, colors=colors)
+    predict_image = spectral.imshow(classes=outputs.astype(int), figsize=(7, 7), colors=colors)
+    spectral.save_rgb('weights/' + dataset + network + 'dataset_out.png', outputs.astype(int), colors=colors)
+    outrgb = cv2.imread('weights/' + dataset + network + 'dataset_out.png', cv2.IMREAD_COLOR)
+    outrgb = cv2.cvtColor(outrgb, cv2.COLOR_BGR2RGB)
 
+    for i in range(height):
+        for j in range(width):
+            if y[i, j] != outputs.astype(int)[i, j]:
+                outrgb[i, j] = [255, 0, 0]
 
-# Print Ground-truth, network output, and comparison
-colors = spectral.spy_colors
-colors[1] = [125, 80, 0]
-colors[2] = [80, 125, 0]
-colors[10] = [150, 30, 100]
-colors[11] = [200, 100,   0]
-ground_truth = spectral.imshow(classes=y, figsize=(7, 7), colors=colors)
-spectral.save_rgb('weights/' + dataset + network + 'dataset_gt.png', y, colors=colors)
-predict_image = spectral.imshow(classes=outputs.astype(int), figsize=(7, 7), colors=colors)
-spectral.save_rgb('weights/' + dataset + network + 'dataset_out.png', outputs.astype(int), colors=colors)
-outrgb = cv2.imread('weights/' + dataset + network + 'dataset_out.png', cv2.IMREAD_COLOR)
-outrgb = cv2.cvtColor(outrgb, cv2.COLOR_BGR2RGB)
-
-for i in range(height):
-    for j in range(width):
-        if y[i, j] != outputs.astype(int)[i, j]:
-            outrgb[i, j] = [255, 0, 0]
-
-plt.figure()
-plt.imshow(outrgb)
+    plt.figure()
+    plt.imshow(outrgb)
