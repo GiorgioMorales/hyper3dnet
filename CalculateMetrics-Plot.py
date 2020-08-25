@@ -17,8 +17,14 @@ k.set_image_data_format('channels_last')
 # os.environ['CUDA_VISIBLE_DEVICES'] = '-1'  # Uncomment to use CPU instead o GPU
 
 
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+LOAD DATASET
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
 # Select dataset. Options are 'Kochia', 'IP', 'PU', 'SA', or 'EUROSAT'
-dataset = 'SA'
+dataset = 'IP'
 train_x, train_y = load_data(dataset=dataset, test=True)
 if dataset == 'Kochia':
     classes = 3
@@ -28,6 +34,12 @@ else:
     classes = int(np.max(train_y)) + 1
 print("Dataset correctly imported")
 
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+EVALUATION
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 windowSize = train_x.shape[1]
 kfold = StratifiedKFold(n_splits=10, shuffle=True, random_state=7)
@@ -40,7 +52,7 @@ cvf1 = []
 
 # Select Network. Options are 'hyper3dnet', 'hybridsn', 'spectrum',
 # 'resnet50' (expect for Kochia), or 'kochiafc' (only for Kochia)
-network = 'resnet50'
+network = 'hyper3dnet'
 
 # Initialize
 confmatrices = np.zeros((10, int(classes), int(classes)))
@@ -88,6 +100,11 @@ for train, test in kfold.split(train_x, train_y):
 
     ntrain = ntrain + 1
 
+# Selects the fold with the minimum performance
+nmin = np.argmin(cvoa)
+model = load_model("weights/" + dataset + "/" + network + "/weights-" + network + dataset + str(nmin + 1) + ".h5")
+model.trainable = False
+
 file_name = "classification_report_hyper3dnet" + dataset + ".txt"
 with open(file_name, 'w') as x_file:
     x_file.write("Overall accuracy%.3f%% (+/- %.3f%%)" % (float(np.mean(cvoa)), float(np.std(cvoa))))
@@ -102,6 +119,12 @@ with open(file_name, 'w') as x_file:
     x_file.write('\n')
     x_file.write("F1 accuracy%.3f%% (+/- %.3f%%)" % (float(np.mean(cvf1)), float(np.std(cvf1))))
 
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+PLOT
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 # Segmentation result
 if dataset == 'IP' or dataset == 'PU' or dataset == 'SA':
@@ -126,11 +149,12 @@ if dataset == 'IP' or dataset == 'PU' or dataset == 'SA':
                 prediction = (model.predict(X_test_image))
                 prediction = np.argmax(prediction, axis=1)
                 outputs[i][j] = prediction + 1
-        
+
     # Print Ground-truth, network output, and comparison
     colors = spectral.spy_colors
     colors[1] = [125, 80, 0]
     colors[2] = [80, 125, 0]
+    colors[4] = [255, 0, 0]
     colors[10] = [150, 30, 100]
     colors[11] = [200, 100,   0]
     ground_truth = spectral.imshow(classes=y, figsize=(7, 7), colors=colors)
@@ -143,7 +167,7 @@ if dataset == 'IP' or dataset == 'PU' or dataset == 'SA':
     for i in range(height):
         for j in range(width):
             if y[i, j] != outputs.astype(int)[i, j]:
-                outrgb[i, j] = [255, 0, 0]
+                outrgb[i, j] = [255, 255, 0]  # Mark the errors in yellow
 
     plt.figure()
     plt.imshow(outrgb)
