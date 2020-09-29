@@ -30,7 +30,7 @@ A total of 76 images of kochia with varying spatial resolution and 300 spectral 
 
 ### Classification results: Indian Pines, Pavia University, and Salinas Datasets
 
-<img src=https://github.com/GiorgioMorales/hyper3dnet/blob/master/results/table2.png alt="alt text" width=480 height=150>
+<img src=https://github.com/GiorgioMorales/hyper3dnet/blob/master/results/table2.png alt="alt text" width=480 height=140>
 
 ### Classification results: EuroSAT Dataset
 
