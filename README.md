@@ -53,3 +53,22 @@ This repository contains the following scripts:
 * `TestDemo.ipynb`: Jupyter file that evaluates the performance metrics of a selected network.
 * `network.py`: Contains all the network architectures used in this work.
 * `utils.py`: Additional methods used to transform the data and calculate metrics.
+
+# Citation
+Use this Bibtex to cite this repository
+
+```
+@article{10.1117/1.JRS.14.036519,
+author = {Giorgio Morales and John W. Sheppard and Bryan Scherrer and Joseph A. Shaw},
+title = {{Reduced-cost hyperspectral convolutional neural networks}},
+volume = {14},
+journal = {Journal of Applied Remote Sensing},
+number = {3},
+publisher = {SPIE},
+pages = {1 -- 18},
+keywords = {convolution neural networks, hyperspectral classification, deep learning, parameter reduction},
+year = {2020},
+doi = {10.1117/1.JRS.14.036519},
+URL = {https://doi.org/10.1117/1.JRS.14.036519}
+}
+```
