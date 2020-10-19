@@ -17,10 +17,10 @@ We used three well-known remote sensing HSI datasets: Indian Pines (IP), Pavia U
 We also experimented with the EuroSAT dataset (EU) in spite of the fact that it is not a hyperspectral but a multispectral dataset, 
 so that we validate the usefulness of our network for images with just a few spectral channels. The original EUROSAT dataset can be downloaded from 
 [here](https://github.com/phelber/EuroSAT). Alternatively, a pre-processed ready-to-use dataset that combines all the images in a single ".h5" file can be downloaded from
-[here](https://montana.box.com/s/wqakb91vp3fwe272ctx88n791s4gnqvj).
+[here](https://montana.box.com/v/eurosatdataset).
 
 Furthermore, we use an in-greenhouse controlled HSI dataset of Kochia leaves in order to classify three different herbicide-resistance levels (herbicide-susceptible, dicamba-resistant, and glyphosate-resistant). 
-A total of 76 images of kochia with varying spatial resolution and 300 spectral bands ranging from 387.12 to 1023.5 nm were captured. From these images, which were previously calibrated and converted to reflectance values, we manually extracted 6,316 25x25 pixel overlapping patches. The Kochia dataset can be downloaded from [here](https://montana.box.com/s/mhpi7mxlw68abb616v0zl9t03zfwue63).
+A total of 76 images of kochia with varying spatial resolution and 300 spectral bands ranging from 387.12 to 1023.5 nm were captured. From these images, which were previously calibrated and converted to reflectance values, we manually extracted 6,316 25x25 pixel overlapping patches. The Kochia dataset can be downloaded from [here](https://montana.box.com/v/kochiadataset).
 
 ## Summary of results
 
